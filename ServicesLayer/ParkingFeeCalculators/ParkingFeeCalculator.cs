@@ -1,4 +1,6 @@
-﻿namespace ServicesLayer.ParkingFeeCalculators;
+﻿using ServicesLayer.ParkingFeeCalculators.Models;
+
+namespace ServicesLayer.ParkingFeeCalculators;
 
 public class ParkingFeeCalculator
 {
@@ -9,41 +11,71 @@ public class ParkingFeeCalculator
         _parkingDailyFeeCalculator = parkingDailyFeeCalculator;
     }
 
-    public int Fee(DateTime from, DateTime to)
+    public ParkingFee CalcParkingFee(DateTime from, DateTime to)
     {
         var fromDate = DateOnly.FromDateTime(from);
         var toDate   = DateOnly.FromDateTime(to);
 
         var crossDays = fromDate.Days(toDate);
 
-        var fee = 0;
+        var items = new List<SingleDayFee>();
 
         if (crossDays >= 1)
         {
+            var dayOfStartTime = new TimeOnly(0,  0,  0);
             var dayOfEndTime   = new TimeOnly(23, 59, 0);
+
             // First Day
             var firstDayFrom = from;
             var firstDayTo   = fromDate.ToDateTime(dayOfEndTime);
-            fee += _parkingDailyFeeCalculator.Fee(firstDayFrom, firstDayTo);
-
-            var dayOfStartTime = new TimeOnly(0,  0,  0);
-            // Last Day
-            var lastDayFrom = toDate.ToDateTime(dayOfStartTime);
-            var lastDayTo   = to;
-            fee += _parkingDailyFeeCalculator.Fee(lastDayFrom, lastDayTo);
+            items.Add(new SingleDayFee
+                      {
+                          StartTime = firstDayFrom,
+                          EndTime   = firstDayTo,
+                          Fee       = _parkingDailyFeeCalculator.Fee(firstDayFrom, firstDayTo),
+                      });
 
             // Middle Days
             var middleDays = crossDays - 1;
-            if (middleDays > 0)
+            for (int i = 0; i < middleDays; i++)
             {
-                fee += _parkingDailyFeeCalculator.MaxFee * middleDays;
+                var middleDay     = fromDate.AddDays(i + 1);
+                var middleDayFrom = middleDay.ToDateTime(dayOfStartTime);
+                var middleDayTo   = middleDay.ToDateTime(dayOfEndTime);
+
+                items.Add(new SingleDayFee
+                          {
+                              StartTime = middleDayFrom,
+                              EndTime   = middleDayTo,
+                              Fee       = _parkingDailyFeeCalculator.Fee(middleDayFrom, middleDayTo),
+                          });
             }
+
+            // Last Day
+            var lastDayFrom = toDate.ToDateTime(dayOfStartTime);
+            var lastDayTo   = to;
+            items.Add(new SingleDayFee
+                      {
+                          StartTime = lastDayFrom,
+                          EndTime   = lastDayTo,
+                          Fee       = _parkingDailyFeeCalculator.Fee(lastDayFrom, lastDayTo),
+                      });
         }
         else
         {
-            fee += _parkingDailyFeeCalculator.Fee(from, to);
+            items.Add(new SingleDayFee
+                      {
+                          StartTime = from,
+                          EndTime   = to,
+                          Fee       = _parkingDailyFeeCalculator.Fee(from, to),
+                      });
         }
 
-        return fee;
+        var result = new ParkingFee
+                     {
+                         Items    = items,
+                         TotalFee = items.Sum(i => i.Fee)
+                     };
+        return result;
     }
 }

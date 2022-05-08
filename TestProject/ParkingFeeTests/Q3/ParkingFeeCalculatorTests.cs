@@ -29,13 +29,13 @@ public class ParkingFeeCalculatorTests
         AssertMethod(from, to, expected);
     }
 
-    private static void AssertMethod(DateTime from, DateTime to, int expected)
+    private static void AssertMethod(DateTime from, DateTime to, int expectedFee)
     {
         var parkingMinutesCalculator  = new ParkingMinutesCalculator();
         var parkingDailyFeeCalculator = new ParkingDailyFeeCalculator(parkingMinutesCalculator);
         var parkingFeeCalculator      = new ParkingFeeCalculator(parkingDailyFeeCalculator);
-        var actual                    = parkingFeeCalculator.Fee(from, to);
+        var actual                    = parkingFeeCalculator.CalcParkingFee(from, to);
 
-        Assert.AreEqual(expected, actual);
+        Assert.AreEqual(expectedFee, actual.TotalFee);
     }
 }
