@@ -2,7 +2,7 @@
 
 namespace TestProject.ParkingFeeTests.Q3;
 
-public class ParkingFeeCalculatorTests
+public class ParkingFeeCalculatorTypeATests
 {
     [TestCase("2022/5/1 09:00:00", "2022/5/1 09:10:59", 0)]  // 同一天
     [TestCase("2022/5/1 09:00:00", "2022/5/1 09:11:59", 7)]  // 同一天
@@ -32,8 +32,8 @@ public class ParkingFeeCalculatorTests
     private static void AssertMethod(DateTime from, DateTime to, int expectedFee)
     {
         var parkingMinutesCalculator  = new ParkingMinutesCalculator();
-        var parkingDailyFeeCalculator = new ParkingDailyFeeCalculator(parkingMinutesCalculator);
-        var parkingFeeCalculator      = new ParkingFeeCalculator(parkingDailyFeeCalculator);
+        var parkingDailyFeeCalculator = new ParkingDailyFeeTypeACalculator(parkingMinutesCalculator);
+        var parkingFeeCalculator      = new ParkingFeeCalculatorV02(parkingDailyFeeCalculator);
         var actual                    = parkingFeeCalculator.CalcParkingFee(from, to);
 
         Assert.AreEqual(expectedFee, actual.TotalFee);

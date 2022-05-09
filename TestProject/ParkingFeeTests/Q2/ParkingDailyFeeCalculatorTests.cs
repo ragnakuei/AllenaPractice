@@ -66,7 +66,7 @@ public class ParkingDailyFeeCalculatorTests
     private static void AssertMethod(DateTime from, DateTime to, int expected)
     {
         var parkingMinutesCalculator  = new ParkingMinutesCalculator();
-        var parkingDailyFeeCalculator = new ParkingDailyFeeCalculator(parkingMinutesCalculator);
+        var parkingDailyFeeCalculator = new ParkingDailyFeeTypeACalculator(parkingMinutesCalculator);
         var actual                    = parkingDailyFeeCalculator.Fee(from, to);
 
         Assert.AreEqual(expected, actual);

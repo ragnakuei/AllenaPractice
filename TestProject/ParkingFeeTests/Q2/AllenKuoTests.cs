@@ -43,7 +43,7 @@ public class AllenKuoTests
         DateTime end   = Convert.ToDateTime(endValue);
 
         var parkingMinutesCalculator = new ParkingMinutesCalculator();
-        var actual                   = new ParkingDailyFeeCalculator(parkingMinutesCalculator).Fee(start, end);
+        var actual                   = new ParkingDailyFeeTypeACalculator(parkingMinutesCalculator).Fee(start, end);
 
         Assert.AreEqual(expected, actual);
     }

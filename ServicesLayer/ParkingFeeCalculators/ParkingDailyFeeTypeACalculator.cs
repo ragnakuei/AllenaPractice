@@ -1,18 +1,21 @@
 namespace ServicesLayer.ParkingFeeCalculators;
 
-public class ParkingDailyFeeCalculator
+/// <summary>
+/// 收費原則 A
+/// 未滿 10 分鐘：免費
+/// 滿 10 分鐘，至半小時 7 元
+/// 超過半小時，至一小時 10 元
+/// 滿一小時後，前半小時 7 元，後半小時 10 元
+/// 每天至多收費 50 元
+/// </summary>
+public class ParkingDailyFeeTypeACalculator : IParkingDailyFeeCalculator
 {
     private readonly ParkingMinutesCalculator _minutesCalculator;
 
-    public ParkingDailyFeeCalculator(ParkingMinutesCalculator minutesCalculator)
+    public ParkingDailyFeeTypeACalculator(ParkingMinutesCalculator minutesCalculator)
     {
         _minutesCalculator = minutesCalculator;
     }
-
-    /// <summary>
-    /// 當天最高收費金額
-    /// </summary>
-    public int MaxFee => 50;
 
     public int Fee(DateTime from, DateTime to)
     {
@@ -23,7 +26,7 @@ public class ParkingDailyFeeCalculator
                       <= 30  => 7,  // 可註解，但為了符合需求，故保留
                       <= 59  => 10, // 可註解，但為了符合需求，故保留
                       <= 300 => CalculateFeeOverOneHour(minutes.GetValueOrDefault()),
-                      _      => MaxFee,
+                      _      => 50, // 當天最高收費金額
                   };
         return fee;
     }
