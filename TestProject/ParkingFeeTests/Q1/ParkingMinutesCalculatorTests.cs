@@ -19,7 +19,9 @@ public class ParkingMinutesCalculatorTests
     }
 
     [Test]
-    [TestCase("00:00:00", "00:00:59")]
+    [TestCase("00:00:00",         "00:00:59")]
+    [TestCase("00:00:00.0000000", "00:00:00.0000001")]
+    [TestCase("00:00:00.0000000", "00:00:59.9999999")]
     public void 同分不同秒(DateTime from, DateTime to)
     {
         AssertMethod(from, to, 0);
@@ -34,8 +36,9 @@ public class ParkingMinutesCalculatorTests
 
     private static void AssertMethod(DateTime from, DateTime to, int? expected)
     {
-        var parkingMinutesCalculator = new ParkingMinutesCalculator();
-        var actual                   = parkingMinutesCalculator.Minutes(from, to);
+        IParkingMinutesCalculator parkingMinutesCalculator = new ParkingMinutesCalculator();
+
+        var actual = parkingMinutesCalculator.Minutes(from, to);
 
         Assert.AreEqual(expected, actual);
     }

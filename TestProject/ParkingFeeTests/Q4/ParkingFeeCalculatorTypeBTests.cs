@@ -77,9 +77,8 @@ public class ParkingFeeCalculatorTypeBTests
                                      int      expectedFee,
                                      int      expectedDays)
     {
-        var parkingMinutesCalculator  = new ParkingMinutesCalculator();
-        var parkingDailyFeeCalculator = new ParkingDailyFeeTypeBCalculator(parkingMinutesCalculator);
-        var parkingFeeCalculator      = new ParkingFeeCalculatorV02(parkingDailyFeeCalculator);
+        var parkingFeeCalculator = new ParkingFeeCalculatorFactory().Get(nameof(ParkingFeeCalculatorV02),
+                                                                         nameof(ParkingDailyFeeTypeBCalculator));
         var actual                    = parkingFeeCalculator.CalcParkingFee(from, to);
 
         Assert.AreEqual(expectedDays, actual.Items.Count);

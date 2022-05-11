@@ -31,10 +31,9 @@ public class ParkingFeeCalculatorTypeATests
 
     private static void AssertMethod(DateTime from, DateTime to, int expectedFee)
     {
-        var parkingMinutesCalculator  = new ParkingMinutesCalculator();
-        var parkingDailyFeeCalculator = new ParkingDailyFeeTypeACalculator(parkingMinutesCalculator);
-        var parkingFeeCalculator      = new ParkingFeeCalculatorV02(parkingDailyFeeCalculator);
-        var actual                    = parkingFeeCalculator.CalcParkingFee(from, to);
+        var parkingFeeCalculator = new ParkingFeeCalculatorFactory().Get(nameof(ParkingFeeCalculatorV02),
+                                                                         nameof(ParkingDailyFeeTypeACalculator));
+        var actual = parkingFeeCalculator.CalcParkingFee(from, to);
 
         Assert.AreEqual(expectedFee, actual.TotalFee);
     }

@@ -1,6 +1,6 @@
 namespace ServicesLayer.ParkingFeeCalculators;
 
-public class ParkingMinutesCalculator
+public class ParkingMinutesCalculator : IParkingMinutesCalculator
 {
     public int? Minutes(DateTime from, DateTime to)
     {
@@ -9,10 +9,8 @@ public class ParkingMinutesCalculator
             return null;
         }
 
-        var fromWithSecondZero = from.AddSeconds(-from.Second);
-        var toWithSecondZero   = to.AddSeconds(-to.Second);
-
-        var minutes = (int)Math.Ceiling((toWithSecondZero - fromWithSecondZero).TotalMinutes);
-        return minutes;
+        var fromInMinutes = from.Ticks / TimeSpan.TicksPerMinute;
+        var toInMinutes   = to.Ticks   / TimeSpan.TicksPerMinute;
+        return Convert.ToInt32(toInMinutes - fromInMinutes);
     }
 }

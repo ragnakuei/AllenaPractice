@@ -7,16 +7,16 @@ namespace ServicesLayer.ParkingFeeCalculators;
 /// </summary>
 public class ParkingDailyFeeTypeCCalculator : IParkingDailyFeeCalculator
 {
-    private readonly ParkingMinutesCalculator _minutesCalculator;
+    private readonly IParkingMinutesCalculator _minutes01Calculator;
 
-    public ParkingDailyFeeTypeCCalculator(ParkingMinutesCalculator minutesCalculator)
+    public ParkingDailyFeeTypeCCalculator(IParkingMinutesCalculator minutes01Calculator)
     {
-        _minutesCalculator = minutesCalculator;
+        _minutes01Calculator = minutes01Calculator;
     }
 
     public int Fee(DateTime from, DateTime to)
     {
-        var minutes = _minutesCalculator.Minutes(from, to);
+        var minutes = _minutes01Calculator.Minutes(from, to);
 
         if (minutes == 0)
         {

@@ -10,16 +10,16 @@ namespace ServicesLayer.ParkingFeeCalculators;
 /// </summary>
 public class ParkingDailyFeeTypeACalculator : IParkingDailyFeeCalculator
 {
-    private readonly ParkingMinutesCalculator _minutesCalculator;
+    private readonly IParkingMinutesCalculator _minutes01Calculator;
 
-    public ParkingDailyFeeTypeACalculator(ParkingMinutesCalculator minutesCalculator)
+    public ParkingDailyFeeTypeACalculator(IParkingMinutesCalculator minutes01Calculator)
     {
-        _minutesCalculator = minutesCalculator;
+        _minutes01Calculator = minutes01Calculator;
     }
 
     public int Fee(DateTime from, DateTime to)
     {
-        var minutes = _minutesCalculator.Minutes(from, to);
+        var minutes = _minutes01Calculator.Minutes(from, to);
         var fee = minutes switch
                   {
                       <= 10  => 0,
@@ -40,7 +40,7 @@ public class ParkingDailyFeeTypeACalculator : IParkingDailyFeeCalculator
         {
             fee += timeSpan.Minutes <= 30
                        ? 7   // 滿1小時內，1 分鐘至 30 分鐘，7 元
-                       : 10; // 滿1小時內，31 分鐘至5 9 分鐘，10 元
+                       : 10; // 滿1小時內，31 分鐘至 59 分鐘，10 元
         }
 
         return fee;

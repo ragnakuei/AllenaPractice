@@ -2,7 +2,7 @@
 
 namespace ServicesLayer.ParkingFeeCalculators;
 
-public class ParkingFeeCalculatorV01
+public class ParkingFeeCalculatorV01 : IParkingFeeCalculator
 {
     private readonly IParkingDailyFeeCalculator _parkingDailyFeeCalculator;
 
